@@ -1,17 +1,18 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { StarshipsModule } from './starships/starships.module';
-import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    StarshipsModule,
     ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      ...(process.env.NODE_ENV === 'production' && { graphiql: false }),
+      graphiql: process.env.NODE_ENV !== 'production',
+      autoSchemaFile: true,
     }),
-    StarshipsModule,
   ],
 })
 export class AppModule {}
