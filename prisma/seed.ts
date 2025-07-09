@@ -1,5 +1,5 @@
-import { prisma } from '../src/config/prisma.config';
-import { Person, Starship } from '../src/generated/prisma';
+import { PrismaClient } from '@prisma/client';
+import { Person, Starship } from '@prisma/client';
 
 const people: Omit<Person, 'id'>[] = [
   {
@@ -127,11 +127,19 @@ const starships: Omit<Starship, 'id'>[] = [
   },
 ];
 
+const prisma = new PrismaClient();
+
 const seed = async () => {
   await prisma.person.createMany({ data: people });
   await prisma.starship.createMany({ data: starships });
 };
 
 seed()
-  .then(() => console.log('database seeded'))
-  .catch(console.error);
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
