@@ -9,5 +9,8 @@ services:
       - '5442:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+networks:
+  default:
+    name: starships-figters-backend
 volumes:
   postgres_data: ~
