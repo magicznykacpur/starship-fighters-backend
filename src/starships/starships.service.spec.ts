@@ -11,6 +11,20 @@ describe('StarshipsService', () => {
   let starshipsService: StarshipsService;
   let prismaService: PrismaService;
 
+  const createManyTestStarships = async (): Promise<
+    { name: { equals: string } }[]
+  > => {
+    const data = [...Array(5).keys()].map((value) => {
+      return { name: `test-starship-${value}`, crewMembers };
+    });
+
+    await starshipsService.createMany({ data });
+
+    return data.map((value) => {
+      return { name: { equals: value.name } };
+    });
+  };
+
   beforeAll(async () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [StarshipsService, PrismaService],
@@ -56,6 +70,10 @@ describe('StarshipsService', () => {
   });
 
   it('should not find unique starship with invalid query', async () => {
+    await starshipsService.create({
+      data: { name: 'test-starship', crewMembers },
+    });
+
     const findResult = await starshipsService.find({
       where: { name: 'not-a-starship' },
     });
@@ -64,15 +82,7 @@ describe('StarshipsService', () => {
   });
 
   it('should find many starships', async () => {
-    const data = [...Array(5).keys()].map((value) => {
-      return { name: `test-starship-${value}`, crewMembers };
-    });
-
-    await starshipsService.createMany({ data });
-
-    const starshipsQuery = data.map((value) => {
-      return { name: { equals: value.name } };
-    });
+    const starshipsQuery = await createManyTestStarships();
 
     const findManyResult = await starshipsService.findMany({
       where: { OR: starshipsQuery },
@@ -84,6 +94,8 @@ describe('StarshipsService', () => {
   });
 
   it('should not find starships with invalid query', async () => {
+    await createManyTestStarships();
+
     const findManyResult = await starshipsService.findMany({
       where: {
         OR: [
@@ -99,11 +111,8 @@ describe('StarshipsService', () => {
   });
 
   it('should find all the starships', async () => {
-    const data = [...Array(5).keys()].map((value) => {
-      return { name: `test-starship-${value}`, crewMembers };
-    });
+    await createManyTestStarships();
 
-    await starshipsService.createMany({ data });
     const findAllResult = await starshipsService.findAll();
 
     expect(findAllResult?.length).toBe(5);
@@ -111,18 +120,22 @@ describe('StarshipsService', () => {
 
   it('should create a new starship', async () => {
     const result = await starshipsService.create({
-      data: { name: 'new-test-starship', crewMembers },
+      data: { name: 'test-starship', crewMembers },
     });
 
     expect(result.id).toBeDefined();
-    expect(result.name).toBe('new-test-starship');
+    expect(result.name).toBe('test-starship');
     expect(result.crewMembers).toBe(42);
   });
 
   it('should fail creating a new starship with not unique name', async () => {
+    await starshipsService.create({
+      data: { name: 'test-starship', crewMembers },
+    });
+
     try {
       await starshipsService.create({
-        data: { name: 'new-test-starship', crewMembers },
+        data: { name: 'test-starship', crewMembers },
       });
     } catch (e: unknown) {
       expect(e).toBeDefined();
@@ -131,15 +144,7 @@ describe('StarshipsService', () => {
   });
 
   it('should create many starships', async () => {
-    const data = [...Array(5).keys()].map((value) => {
-      return { name: `new-test-starship-${value}`, crewMembers };
-    });
-
-    await starshipsService.createMany({ data });
-
-    const starshipsQuery = data.map((value) => {
-      return { name: { equals: value.name } };
-    });
+    const starshipsQuery = await createManyTestStarships();
 
     const findManyResult = await starshipsService.findMany({
       where: {
@@ -149,13 +154,15 @@ describe('StarshipsService', () => {
 
     expect(findManyResult).toBeDefined();
     expect(findManyResult?.length).toBe(5);
-    expect(findManyResult?.at(4)?.name).toBe('new-test-starship-4');
+    expect(findManyResult?.at(4)?.name).toBe('test-starship-4');
   });
 
   it('should fail creating many starships with not unique names', async () => {
     const data = [...Array(5).keys()].map((value) => {
-      return { name: `new-test-starship-${value}`, crewMembers };
+      return { name: `test-starship-${value}`, crewMembers };
     });
+
+    await starshipsService.createMany({ data });
 
     try {
       await starshipsService.createMany({ data });
@@ -187,6 +194,10 @@ describe('StarshipsService', () => {
   });
 
   it('should fail to update a starship when not found', async () => {
+    await starshipsService.create({
+      data: { name: 'test-starship', crewMembers },
+    });
+
     try {
       await starshipsService.update({
         where: { name: 'not-a-test-starship' },
@@ -201,15 +212,7 @@ describe('StarshipsService', () => {
   });
 
   it('should update many starships', async () => {
-    const data = [...Array(5).keys()].map((value) => {
-      return { name: `test-starship-${value}`, crewMembers };
-    });
-
-    await starshipsService.createMany({ data });
-
-    const starshipsQuery = data.map((value) => {
-      return { name: { equals: value.name } };
-    });
+    const starshipsQuery = await createManyTestStarships();
 
     const updatedStarships = await starshipsService.updateMany({
       where: {
@@ -226,32 +229,30 @@ describe('StarshipsService', () => {
   });
 
   it('should fail to update many starships when not found', async () => {
-    try {
-      await starshipsService.updateMany({
-        where: {
-          OR: [
-            { name: { equals: 'test-starship-12' } },
-            { name: { equals: 'test-starship-13' } },
-          ],
-        },
-        data: {
-          name: { set: 'updated-starship' },
-        },
-      });
-    } catch (e: unknown) {
-      expect(e).toBeDefined();
-      expect((e as Error).message).toContain(uniqueNameConstraint);
-    }
+    await createManyTestStarships();
+
+    const updateResult = await starshipsService.updateMany({
+      where: {
+        OR: [
+          { name: { equals: 'test-starship-12' } },
+          { name: { equals: 'test-starship-13' } },
+        ],
+      },
+      data: {
+        name: { set: 'updated-starship' },
+      },
+    });
+
+    expect(updateResult.length).toBe(0);
   });
 
   it('should fail to update many starships when trying to set same name', async () => {
+    const starshipsQuery = await createManyTestStarships();
+
     try {
       await starshipsService.updateMany({
         where: {
-          OR: [
-            { name: { equals: 'test-starship-0' } },
-            { name: { equals: 'test-starship-1' } },
-          ],
+          OR: starshipsQuery,
         },
         data: {
           name: { set: 'updated-starship' },
@@ -278,6 +279,10 @@ describe('StarshipsService', () => {
   });
 
   it('should fail to delete a starship when not found', async () => {
+    await starshipsService.create({
+      data: { name: 'starship-to-delete', crewMembers: 1 },
+    });
+
     try {
       await starshipsService.delete({ where: { name: 'not-a-starship' } });
     } catch (e: unknown) {
@@ -287,39 +292,32 @@ describe('StarshipsService', () => {
   });
 
   it('should delete many starships', async () => {
-    const data = [...Array(5).keys()].map((value) => {
-      return { name: `starship-to-delete-${value}`, crewMembers };
-    });
+    const starshipsQuery = await createManyTestStarships();
 
-    await starshipsService.createMany({ data });
-
-    const queryData = data.map((value) => {
-      return {
-        name: {
-          equals: value.name,
-        },
-      };
-    });
-
-    await starshipsService.deleteMany({ where: { OR: queryData } });
+    await starshipsService.deleteMany({ where: { OR: starshipsQuery } });
 
     const starships = await starshipsService.findMany({
-      where: { OR: queryData },
+      where: { OR: starshipsQuery },
     });
 
     expect(starships?.length).toBe(0);
   });
 
   it('should fail to delete many starships when not found', async () => {
-    const queryData = [...Array(5).keys()].map((value) => {
+    const starshipsQuery = await createManyTestStarships();
+
+    const deleteQuery = [...Array(5).keys()].map((value) => {
       return { name: { equals: `starship-to-delete-${value}` } };
     });
 
-    try {
-      await starshipsService.deleteMany({ where: { OR: queryData } });
-    } catch (e: unknown) {
-      expect(e).toBeDefined();
-      expect((e as Error).message).toContain(noRecordFoundForDelete);
-    }
+    const result = await starshipsService.deleteMany({
+      where: { OR: deleteQuery },
+    });
+    expect(result).not.toBeDefined();
+
+    const starships = await starshipsService.findMany({
+      where: { OR: starshipsQuery },
+    });
+    expect(starships?.length).toBe(5);
   });
 });
