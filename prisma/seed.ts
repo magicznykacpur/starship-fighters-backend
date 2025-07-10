@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, StarshipClass } from '@prisma/client';
 import { Person, Starship } from '@prisma/client';
 
 const people: Omit<Person, 'id'>[] = [
@@ -64,66 +64,96 @@ const people: Omit<Person, 'id'>[] = [
   },
 ];
 
-const starships: Omit<Starship, 'id'>[] = [
+const starships: Omit<Starship, 'id' | 'createdAt' | 'updatedAt'>[] = [
   {
     name: 'LGC90QBJ0OJ',
+    model: 'LGC90QBJ0OJ-1',
+    length: 2500,
+    cargoCapacity: 20000,
+    maxSpeed: 30000,
+    hyperdriveRating: 2.5,
+    starshipClass: StarshipClass.FIGHTER,
     crewMembers: 56,
   },
   {
     name: 'SJM43EBF5VN',
-    crewMembers: 50,
+    model: 'SJM43EBF5VN-1',
+    length: 3500,
+    cargoCapacity: 30000,
+    maxSpeed: 40000,
+    hyperdriveRating: 2.0,
+    starshipClass: StarshipClass.TRANSPORTER,
+    crewMembers: 200,
   },
   {
     name: 'DTY28DRL6PX',
-    crewMembers: 77,
+    model: 'DTY28DRL6PX-1',
+    length: 1500,
+    cargoCapacity: 2700,
+    maxSpeed: 45000,
+    hyperdriveRating: 3.0,
+    starshipClass: StarshipClass.SPEEDER,
+    crewMembers: 5,
   },
   {
     name: 'DPD79CQT3PL',
-    crewMembers: 10,
+    model: 'DPD79CQT3PL-2',
+    length: 2600,
+    cargoCapacity: 18000,
+    maxSpeed: 2800,
+    hyperdriveRating: 2.6,
+    starshipClass: StarshipClass.FIGHTER,
+    crewMembers: 75,
   },
   {
     name: 'LJT77EKL4TM',
-    crewMembers: 93,
+    model: 'LJT77EKL4TM-2',
+    length: 7200,
+    cargoCapacity: 22000,
+    maxSpeed: 450,
+    hyperdriveRating: 0.5,
+    starshipClass: StarshipClass.TRANSPORTER,
+    crewMembers: 250,
   },
   {
     name: 'EDQ81IHR8UG',
-    crewMembers: 91,
-  },
-  {
-    name: 'PTE86GKC3ZD',
-    crewMembers: 38,
-  },
-  {
-    name: 'ZKF89JOG7TS',
-    crewMembers: 19,
-  },
-  {
-    name: 'LDK55TUO6NJ',
-    crewMembers: 65,
-  },
-  {
-    name: 'USG46DBX8BQ',
-    crewMembers: 96,
-  },
-  {
-    name: 'ONW57DTG7OV',
-    crewMembers: 10,
-  },
-  {
-    name: 'YUB67MFI1ZT',
-    crewMembers: 24,
-  },
-  {
-    name: 'RGY74SPE3BC',
+    model: 'EDQ81IHR8UG-2',
+    length: 1050,
+    cargoCapacity: 500,
+    maxSpeed: 6500,
+    hyperdriveRating: 4.5,
+    starshipClass: StarshipClass.SPEEDER,
     crewMembers: 7,
   },
   {
-    name: 'MZK00BCS4ST',
-    crewMembers: 83,
+    name: 'PTE86GKC3ZD',
+    model: 'PTE86GKC3ZD-3',
+    length: 1650,
+    cargoCapacity: 2600,
+    maxSpeed: 2650,
+    hyperdriveRating: 1.8,
+    starshipClass: StarshipClass.FIGHTER,
+    crewMembers: 42,
   },
   {
-    name: 'OHV92FCW5PJ',
-    crewMembers: 25,
+    name: 'ZKF89JOG7TS',
+    model: 'ZKF89JOG7TS-3',
+    length: 5000,
+    cargoCapacity: 7000,
+    maxSpeed: 1250,
+    hyperdriveRating: 1.3,
+    starshipClass: StarshipClass.TRANSPORTER,
+    crewMembers: 120,
+  },
+  {
+    name: 'LDK55TUO6NJ',
+    model: 'LDK55TUO6NJ-3',
+    length: 495,
+    cargoCapacity: 1000,
+    maxSpeed: 5500,
+    hyperdriveRating: 5.7,
+    starshipClass: StarshipClass.SPEEDER,
+    crewMembers: 12,
   },
 ];
 

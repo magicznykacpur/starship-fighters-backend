@@ -4,7 +4,7 @@ generator client {
 
 generator nestgraphql {
   provider = "node node_modules/prisma-nestjs-graphql"
-  output = "../src/generated/models"
+  output   = "../src/generated/models"
 }
 
 datasource db {
@@ -12,10 +12,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum StarshipClass {
+  FIGHTER
+  TRANSPORTER
+  SPEEDER
+}
+
 model Starship {
-  id          String @id @default(uuid())
-  name        String @unique
-  crewMembers Int
+  id               String        @id @default(uuid())
+  name             String        @unique @default("")
+  model            String        @unique @default("")
+  length           Int           @default(0)
+  cargoCapacity    Int           @default(0)
+  maxSpeed         Int           @default(0)
+  hyperdriveRating Float         @default(1.0)
+  starshipClass    StarshipClass @default(FIGHTER)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @default(now())
+  crewMembers      Int           @default(0)
 
   @@map("starships")
 }
