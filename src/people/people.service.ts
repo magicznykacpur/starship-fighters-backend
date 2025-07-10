@@ -61,6 +61,6 @@ export class PeopleService {
   }
 
   async deleteMany(args: DeleteManyPersonArgs): Promise<void> {
-    await this.prisma.starship.deleteMany(args);
+    await this.prisma.person.deleteMany(args);
   }
 }

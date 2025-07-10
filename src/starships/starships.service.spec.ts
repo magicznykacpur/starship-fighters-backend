@@ -220,11 +220,7 @@ describe('StarshipsService', () => {
   });
 
   it('should update single starship', async () => {
-    await starshipsService.create({ data: testStarShip });
-
-    const starship = await starshipsService.find({
-      where: { name: 'test-starship' },
-    });
+    const starship = await starshipsService.create({ data: testStarShip });
 
     const updatedStarship = await starshipsService.update({
       where: { id: starship?.id },
@@ -369,6 +365,7 @@ describe('StarshipsService', () => {
     const notDeletedStarships = await starshipsService.findMany({
       where: { OR: starshipsQuery },
     });
-    expect(starships?.length).toBe(5);
+
+    expect(notDeletedStarships?.length).toBe(5);
   });
 });
