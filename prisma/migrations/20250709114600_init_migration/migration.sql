@@ -11,7 +11,7 @@ CREATE TABLE "starships" (
 CREATE TABLE "people" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "mass" INTEGER NOT NULL,
+    "mass" INTEGER NOT NULL DEFAULT 85,
 
     CONSTRAINT "people_pkey" PRIMARY KEY ("id")
 );
