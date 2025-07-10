@@ -20,16 +20,16 @@ enum StarshipClass {
 
 model Starship {
   id               String        @id @default(uuid())
-  name             String        @unique @default("")
-  model            String        @unique @default("")
-  length           Int           @default(0)
-  cargoCapacity    Int           @default(0)
-  maxSpeed         Int           @default(0)
-  hyperdriveRating Float         @default(1.0)
-  starshipClass    StarshipClass @default(FIGHTER)
+  name             String        @unique
+  model            String        @unique
+  length           Int
+  cargoCapacity    Int
+  maxSpeed         Int
+  hyperdriveRating Float
+  starshipClass    StarshipClass
   createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @default(now())
-  crewMembers      Int           @default(0)
+  updatedAt        DateTime      @updatedAt
+  crewMembers      Int
 
   @@map("starships")
 }
