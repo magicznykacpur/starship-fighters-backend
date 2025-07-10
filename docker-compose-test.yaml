@@ -1,13 +1,13 @@
 services:
-  db:
+  test-db:
     image: 'postgres:15'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: starship-fighters
+      POSTGRES_DB: starship-fighters-test
     ports:
-      - '5442:5432'
+      - '5443:5432'
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_test_data:/var/lib/postgresql/data
 volumes:
-  postgres_data: ~
+  postgres_test_data: ~
