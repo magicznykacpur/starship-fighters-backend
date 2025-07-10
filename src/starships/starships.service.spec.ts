@@ -15,7 +15,11 @@ describe('StarshipsService', () => {
     { name: { equals: string } }[]
   > => {
     const data = [...Array(5).keys()].map((value) => {
-      return { name: `test-starship-${value}`, crewMembers };
+      return {
+        name: `test-starship-${value}`,
+        model: `model-${value}`,
+        crewMembers,
+      };
     });
 
     await starshipsService.createMany({ data });
@@ -159,7 +163,11 @@ describe('StarshipsService', () => {
 
   it('should fail creating many starships with not unique names', async () => {
     const data = [...Array(5).keys()].map((value) => {
-      return { name: `test-starship-${value}`, crewMembers };
+      return {
+        name: `test-starship-${value}`,
+        model: `model-${value}`,
+        crewMembers,
+      };
     });
 
     await starshipsService.createMany({ data });

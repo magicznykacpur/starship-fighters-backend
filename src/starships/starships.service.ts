@@ -33,29 +33,19 @@ export class StarshipsService {
   }
 
   async create({ data }: CreateOneStarshipArgs): Promise<Starship> {
-    const starship = await this.prisma.starship.create({
-      data,
-      select: { id: true, name: true, crewMembers: true },
-    });
+    const starship = await this.prisma.starship.create({ data });
 
     return starship;
   }
 
   async createMany({ data }: CreateManyStarshipArgs): Promise<Starship[]> {
-    const starships = await this.prisma.starship.createManyAndReturn({
-      data,
-      select: { id: true, name: true, crewMembers: true },
-    });
+    const starships = await this.prisma.starship.createManyAndReturn({ data });
 
     return starships;
   }
 
   async update({ where, data }: UpdateOneStarshipArgs): Promise<Starship> {
-    const starship = await this.prisma.starship.update({
-      where,
-      data,
-      select: { id: true, name: true, crewMembers: true },
-    });
+    const starship = await this.prisma.starship.update({ where, data });
 
     return starship;
   }
@@ -67,7 +57,6 @@ export class StarshipsService {
     const starships = await this.prisma.starship.updateManyAndReturn({
       where,
       data,
-      select: { id: true, name: true, crewMembers: true },
     });
 
     return starships;
