@@ -1,66 +1,76 @@
 import { PrismaClient, StarshipClass } from '@prisma/client';
 import { Person, Starship } from '@prisma/client';
 
-const people: Omit<Person, 'id'>[] = [
+const people: Omit<Person, 'id' | 'createdAt' | 'updatedAt'>[] = [
   {
     name: 'Jolie',
-    mass: 718,
+    mass: 82,
+    birthYear: 1994,
+    eyeColor: 'blue',
+    hairColor: 'black',
+    height: 188,
+    homeworld: 'venus',
+    skinColor: 'black',
   },
   {
     name: 'McKenzie',
-    mass: 802,
+    mass: 77,
+    birthYear: 1995,
+    eyeColor: 'red',
+    hairColor: 'blue',
+    height: 192,
+    homeworld: 'venus',
+    skinColor: 'white',
   },
   {
     name: 'Tanek',
-    mass: 817,
+    mass: 102,
+    birthYear: 1865,
+    eyeColor: 'gray',
+    hairColor: 'red',
+    height: 202,
+    homeworld: 'mars',
+    skinColor: 'gray',
   },
   {
     name: 'Amelia',
-    mass: 495,
+    mass: 65,
+    birthYear: 1998,
+    eyeColor: 'green',
+    hairColor: 'green',
+    height: 176,
+    homeworld: 'jupiter',
+    skinColor: 'red',
   },
   {
     name: 'Tanner',
-    mass: 393,
+    mass: 94,
+    birthYear: 2012,
+    eyeColor: 'teal',
+    hairColor: 'brown',
+    height: 199,
+    homeworld: 'mercury',
+    skinColor: 'white',
   },
   {
     name: 'Kathleen',
-    mass: 944,
+    mass: 88,
+    birthYear: 2000,
+    eyeColor: 'blue',
+    hairColor: 'blonde',
+    height: 180,
+    homeworld: 'earth',
+    skinColor: 'brown',
   },
   {
     name: 'Macon',
-    mass: 205,
-  },
-  {
-    name: 'Knox',
-    mass: 126,
-  },
-  {
-    name: 'Zenia',
-    mass: 501,
-  },
-  {
-    name: 'Madaline',
-    mass: 260,
-  },
-  {
-    name: 'Hamish',
-    mass: 40,
-  },
-  {
-    name: 'Justina',
-    mass: 508,
-  },
-  {
-    name: 'Justin',
-    mass: 941,
-  },
-  {
-    name: 'Abraham',
-    mass: 907,
-  },
-  {
-    name: 'Darius',
-    mass: 858,
+    mass: 115,
+    birthYear: 1995,
+    eyeColor: 'brown',
+    hairColor: 'blonde',
+    height: 210,
+    homeworld: 'earth',
+    skinColor: 'brown',
   },
 ];
 
