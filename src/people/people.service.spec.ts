@@ -7,12 +7,9 @@ import { PeopleService } from './people.service';
 
 describe('PeopleService', () => {
   let peopleService: PeopleService;
-  let prismaService: PrismaService;
 
   const uniqueNameConstraint =
     'Unique constraint failed on the fields: (`name`)';
-  const uniqueModelConstraint =
-    'Unique constraint failed on the fields: (`model`)';
   const noRecordFoundForDelete = 'No record was found for a delete.';
 
   const testPerson: PersonCreateInput = {
@@ -55,12 +52,10 @@ describe('PeopleService', () => {
     }).compile();
 
     peopleService = module.get<PeopleService>(PeopleService);
-    prismaService = module.get<PrismaService>(PrismaService);
   });
 
   afterEach(async () => {
     const allPeople = await peopleService.findAll();
-    console.log('ALL PEOPLE', allPeople)
 
     const allPeopleQuery = allPeople?.map((person) => {
       return { id: { equals: person.id } };
@@ -72,10 +67,6 @@ describe('PeopleService', () => {
 
   it('should provide people service', () => {
     expect(peopleService).toBeDefined();
-  });
-
-  it('should provide prisma service', () => {
-    expect(prismaService).toBeDefined();
   });
 
   it('should find unique person', async () => {

@@ -54,11 +54,11 @@ export class StarshipsResolver {
       const starship = await this.starshipService.create(args);
       return starship;
     } catch (e: unknown) {
-      if ((e as Error).message.includes('(`name`')) {
+      if ((e as Error).message.includes('(`name`)')) {
         throw new BadRequestException('Name must be unique');
       }
 
-      if ((e as Error).message.includes('(`model`')) {
+      if ((e as Error).message.includes('(`model`)')) {
         throw new BadRequestException('Model must be unique');
       }
     }
@@ -72,11 +72,11 @@ export class StarshipsResolver {
       const starships = await this.starshipService.createMany(args);
       return starships;
     } catch (e: unknown) {
-      if ((e as Error).message.includes('(`name`')) {
+      if ((e as Error).message.includes('(`name`)')) {
         throw new BadRequestException('Names must be unique');
       }
 
-      if ((e as Error).message.includes('(`model`')) {
+      if ((e as Error).message.includes('(`model`)')) {
         throw new BadRequestException('Models must be unique');
       }
     }

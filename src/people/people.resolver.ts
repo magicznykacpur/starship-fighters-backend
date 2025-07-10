@@ -51,9 +51,15 @@ export class PeopleResolver {
     @Args() args: CreateOnePersonArgs,
   ): Promise<Person | void> {
     try {
-      return this.peopleService.create(args);
+      const person = await this.peopleService.create(args);
+
+      return person;
     } catch (e: unknown) {
-      if ((e as Error).message.includes('(`name`')) {
+      if (
+        (e as Error).message.includes(
+          'Unique constraint failed on the fields: (`name`)',
+        )
+      ) {
         throw new BadRequestException('Name must be unique');
       }
     }
@@ -64,9 +70,15 @@ export class PeopleResolver {
     @Args() args: CreateManyPersonArgs,
   ): Promise<Person[] | void> {
     try {
-      return this.peopleService.createMany(args);
+      const people = await this.peopleService.createMany(args);
+
+      return people;
     } catch (e: unknown) {
-      if ((e as Error).message.includes('(`name`')) {
+      if (
+        (e as Error).message.includes(
+          'Unique constraint failed on the fields: (`name`)',
+        )
+      ) {
         throw new BadRequestException('Names must be unique');
       }
     }
@@ -77,7 +89,9 @@ export class PeopleResolver {
     @Args() args: UpdateOnePersonArgs,
   ): Promise<Person | void> {
     try {
-      return this.peopleService.update(args);
+      const person = await this.peopleService.update(args);
+
+      return person;
     } catch (e: unknown) {
       if ((e as Error).message.includes('No record was found for an update.')) {
         throw new BadRequestException('No record was found for an update.');

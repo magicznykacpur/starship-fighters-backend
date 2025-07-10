@@ -9,8 +9,6 @@ import { StarshipsService } from './starships.service';
 
 describe('StarshipsResolver', () => {
   let starshipsResolver: StarshipsResolver;
-  let starshipsService: StarshipsService;
-  let prismaService: PrismaService;
 
   const testStarShip: StarshipCreateInput = {
     name: 'test-starship',
@@ -54,8 +52,6 @@ describe('StarshipsResolver', () => {
     }).compile();
 
     starshipsResolver = module.get<StarshipsResolver>(StarshipsResolver);
-    starshipsService = module.get<StarshipsService>(StarshipsService);
-    prismaService = module.get<PrismaService>(PrismaService);
   });
 
   afterEach(async () => {
@@ -76,10 +72,8 @@ describe('StarshipsResolver', () => {
     });
   });
 
-  it('should be defined', () => {
+  it('should define resolver', () => {
     expect(starshipsResolver).toBeDefined();
-    expect(starshipsService).toBeDefined();
-    expect(prismaService).toBeDefined();
   });
 
   it('should query starship by name', async () => {

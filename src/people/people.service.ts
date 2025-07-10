@@ -15,45 +15,31 @@ export class PeopleService {
   constructor(private readonly prisma: PrismaService) {}
 
   async find(args: FindUniquePersonArgs): Promise<Person | null> {
-    const person = await this.prisma.person.findUnique(args);
-
-    return person;
+    return this.prisma.person.findUnique(args);
   }
 
   async findAll(): Promise<Person[] | null> {
-    const people = await this.prisma.person.findMany();
-
-    return people;
+    return this.prisma.person.findMany();
   }
 
-  async findMany(args: FindManyPersonArgs): Promise<Person[] | null> {
-    const people = await this.prisma.person.findMany(args);
-
-    return people;
+  async findMany({ where }: FindManyPersonArgs): Promise<Person[] | null> {
+    return this.prisma.person.findMany({ where });
   }
 
   async create(args: CreateOnePersonArgs): Promise<Person> {
-    const person = await this.prisma.person.create(args);
-
-    return person;
+    return this.prisma.person.create(args);
   }
 
   async createMany(args: CreateManyPersonArgs): Promise<Person[]> {
-    const people = await this.prisma.person.createManyAndReturn(args);
-
-    return people;
+    return this.prisma.person.createManyAndReturn(args);
   }
 
   async update(args: UpdateOnePersonArgs): Promise<Person> {
-    const person = await this.prisma.person.update(args);
-
-    return person;
+    return await this.prisma.person.update(args);
   }
 
   async updateMany(args: UpdateManyPersonArgs): Promise<Person[]> {
-    const people = await this.prisma.person.updateManyAndReturn(args);
-
-    return people;
+    return await this.prisma.person.updateManyAndReturn(args);
   }
 
   async delete(args: DeleteOnePersonArgs): Promise<void> {
