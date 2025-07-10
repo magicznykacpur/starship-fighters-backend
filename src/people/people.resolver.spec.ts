@@ -1,9 +1,8 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Person, StarshipClass } from '@prisma/client';
+import { Person } from '@prisma/client';
 import { CreateManyPersonArgs } from 'src/generated/models/person/create-many-person.args';
 import { PersonCreateInput } from 'src/generated/models/person/person-create.input';
-import { CreateManyStarshipArgs } from 'src/generated/models/starship/create-many-starship.args';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PeopleResolver } from './people.resolver';
 import { PeopleService } from './people.service';
@@ -101,7 +100,7 @@ describe('PeopleResolver', () => {
     const people = await createManyTestPeople();
 
     const person = await peopleResolver.findPerson({
-      where: { id: people[0].id },
+      where: { id: people?.at(0)?.id },
     });
 
     expect(person).toBeDefined();
@@ -199,7 +198,7 @@ describe('PeopleResolver', () => {
 
     expect(people).toBeDefined();
     expect(people?.length).toBe(5);
-    expect(people[0].name).toBe(manyPersonArgs.data[0].name);
+    expect(people?.at(0)?.name).toBe(manyPersonArgs.data[0].name);
   });
 
   it('should fail to create a person with not unique name', async () => {

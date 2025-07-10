@@ -209,7 +209,11 @@ describe('StarshipsService', () => {
     const starships = await starshipsService.createMany(args);
 
     const uniqueNames = starships.map((starship) => {
-      return { ...starship, id: undefined, name: `${starship.id}-${starship.name}` };
+      return {
+        ...starship,
+        id: undefined,
+        name: `${starship.id}-${starship.name}`,
+      };
     });
 
     try {
