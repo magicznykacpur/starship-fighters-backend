@@ -8,7 +8,6 @@
   - Added the required column `maxSpeed` to the `starships` table without a default value. This is not possible if the table is not empty.
   - Added the required column `model` to the `starships` table without a default value. This is not possible if the table is not empty.
   - Added the required column `starshipClass` to the `starships` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `updatedAt` to the `starships` table without a default value. This is not possible if the table is not empty.
 
 */
 -- CreateEnum
@@ -22,7 +21,7 @@ ADD COLUMN     "length" INTEGER NOT NULL,
 ADD COLUMN     "maxSpeed" INTEGER NOT NULL,
 ADD COLUMN     "model" TEXT NOT NULL,
 ADD COLUMN     "starshipClass" "StarshipClass" NOT NULL,
-ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL;
+ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
 -- CreateIndex
 CREATE UNIQUE INDEX "starships_model_key" ON "starships"("model");
