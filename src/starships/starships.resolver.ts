@@ -1,6 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { StarshipService } from './starships.service';
+import { StarshipsService } from './starships.service';
 import { Starship } from 'src/generated/models/starship/starship.model';
 import { FindUniqueStarshipArgs } from 'src/generated/models/starship/find-unique-starship.args';
 import { CreateOneStarshipArgs } from 'src/generated/models/starship/create-one-starship.args';
@@ -11,8 +11,8 @@ import { UpdateManyStarshipArgs } from 'src/generated/models/starship/update-man
 import { DeleteManyStarshipArgs } from 'src/generated/models/starship/delete-many-starship.args';
 
 @Resolver('starships')
-export class StarshipResolver {
-  constructor(private readonly starshipService: StarshipService) {}
+export class StarshipsResolver {
+  constructor(private readonly starshipService: StarshipsService) {}
 
   @Query(() => [Starship])
   async findStarships(): Promise<Starship[] | null> {

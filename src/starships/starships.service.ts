@@ -11,7 +11,7 @@ import { UpdateOneStarshipArgs } from 'src/generated/models/starship/update-one-
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class StarshipService {
+export class StarshipsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async find({ where }: FindUniqueStarshipArgs): Promise<Starship | null> {
