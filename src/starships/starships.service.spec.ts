@@ -1,41 +1,64 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Starship, StarshipClass } from '@prisma/client';
+import { CreateManyStarshipArgs } from 'src/generated/models/starship/create-many-starship.args';
+import { StarshipCreateInput } from 'src/generated/models/starship/starship-create.input';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { StarshipsService } from './starships.service';
 
 describe('StarshipsService', () => {
-  const crewMembers = 42;
-  const uniqueNameConstraint =
-    'Unique constraint failed on the fields: (`name`)';
-  const noRecordFoundForDelete = 'No record was found for a delete.';
-
   let starshipsService: StarshipsService;
   let prismaService: PrismaService;
 
-  const createManyTestStarships = async (): Promise<
-    { name: { equals: string } }[]
-  > => {
-    const data = [...Array(5).keys()].map((value) => {
-      return {
-        name: `test-starship-${value}`,
-        model: `model-${value}`,
-        crewMembers,
-      };
-    });
+  const uniqueNameConstraint =
+    'Unique constraint failed on the fields: (`name`)';
+  const uniqueModelConstraint =
+    'Unique constraint failed on the fields: (`model`)';
+  const noRecordFoundForDelete = 'No record was found for a delete.';
 
-    await starshipsService.createMany({ data });
+  const testStarShip: StarshipCreateInput = {
+    name: 'test-starship',
+    model: 'model-0',
+    length: 2500,
+    cargoCapacity: 1000,
+    maxSpeed: 500,
+    hyperdriveRating: 1.0,
+    starshipClass: StarshipClass.FIGHTER,
+    crewMembers: 42,
+  };
 
-    return data.map((value) => {
-      return { name: { equals: value.name } };
-    });
+  const prepareManyStarshipsArgs = (): CreateManyStarshipArgs => {
+    return {
+      data: [...Array(5).keys()].map((value) => {
+        return {
+          name: `test-starship-${value}`,
+          model: `model-${value}`,
+          length: 2500 * value,
+          cargoCapacity: 1000 * value,
+          maxSpeed: 500 * value,
+          hyperdriveRating: 1.0 * value,
+          starshipClass:
+            value % 2 === 1 ? StarshipClass.FIGHTER : StarshipClass.SPEEDER,
+          crewMembers: 42,
+        };
+      }),
+    };
+  };
+
+  const createManyTestStarships = async (): Promise<Starship[]> => {
+    const args: CreateManyStarshipArgs = prepareManyStarshipsArgs();
+
+    const starships = await starshipsService.createMany(args);
+
+    return starships;
   };
 
   beforeAll(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [StarshipsService, PrismaService],
     }).compile();
 
-    starshipsService = app.get<StarshipsService>(StarshipsService);
-    prismaService = app.get<PrismaService>(PrismaService);
+    starshipsService = module.get<StarshipsService>(StarshipsService);
+    prismaService = module.get<PrismaService>(PrismaService);
   });
 
   afterEach(async () => {
@@ -61,9 +84,7 @@ describe('StarshipsService', () => {
   });
 
   it('should find unique starship', async () => {
-    const createResult = await starshipsService.create({
-      data: { name: 'test-starship', crewMembers },
-    });
+    const createResult = await starshipsService.create({ data: testStarShip });
 
     const findResult = await starshipsService.find({
       where: { id: createResult.id },
@@ -74,9 +95,7 @@ describe('StarshipsService', () => {
   });
 
   it('should not find unique starship with invalid query', async () => {
-    await starshipsService.create({
-      data: { name: 'test-starship', crewMembers },
-    });
+    await starshipsService.create({ data: testStarShip });
 
     const findResult = await starshipsService.find({
       where: { name: 'not-a-starship' },
@@ -86,7 +105,10 @@ describe('StarshipsService', () => {
   });
 
   it('should find many starships', async () => {
-    const starshipsQuery = await createManyTestStarships();
+    const starships = await createManyTestStarships();
+    const starshipsQuery = starships.map((starship) => {
+      return { id: { equals: starship.id } };
+    });
 
     const findManyResult = await starshipsService.findMany({
       where: { OR: starshipsQuery },
@@ -123,9 +145,7 @@ describe('StarshipsService', () => {
   });
 
   it('should create a new starship', async () => {
-    const result = await starshipsService.create({
-      data: { name: 'test-starship', crewMembers },
-    });
+    const result = await starshipsService.create({ data: testStarShip });
 
     expect(result.id).toBeDefined();
     expect(result.name).toBe('test-starship');
@@ -133,22 +153,32 @@ describe('StarshipsService', () => {
   });
 
   it('should fail creating a new starship with not unique name', async () => {
-    await starshipsService.create({
-      data: { name: 'test-starship', crewMembers },
-    });
+    await starshipsService.create({ data: testStarShip });
 
     try {
-      await starshipsService.create({
-        data: { name: 'test-starship', crewMembers },
-      });
+      await starshipsService.create({ data: testStarShip });
     } catch (e: unknown) {
-      expect(e).toBeDefined();
       expect((e as Error).message).toContain(uniqueNameConstraint);
     }
   });
 
+  it('should fail creating a new starship with not unique model', async () => {
+    await starshipsService.create({ data: testStarShip });
+
+    try {
+      await starshipsService.create({
+        data: { ...testStarShip, name: 'new-name' },
+      });
+    } catch (e: unknown) {
+      expect((e as Error).message).toContain(uniqueModelConstraint);
+    }
+  });
+
   it('should create many starships', async () => {
-    const starshipsQuery = await createManyTestStarships();
+    const starships = await createManyTestStarships();
+    const starshipsQuery = starships.map((starship) => {
+      return { id: { equals: starship.id } };
+    });
 
     const findManyResult = await starshipsService.findMany({
       where: {
@@ -162,28 +192,35 @@ describe('StarshipsService', () => {
   });
 
   it('should fail creating many starships with not unique names', async () => {
-    const data = [...Array(5).keys()].map((value) => {
-      return {
-        name: `test-starship-${value}`,
-        model: `model-${value}`,
-        crewMembers,
-      };
-    });
+    const args: CreateManyStarshipArgs = prepareManyStarshipsArgs();
 
-    await starshipsService.createMany({ data });
+    await starshipsService.createMany(args);
 
     try {
-      await starshipsService.createMany({ data });
+      await starshipsService.createMany(args);
     } catch (e: unknown) {
-      expect(e).toBeDefined();
       expect((e as Error).message).toContain(uniqueNameConstraint);
     }
   });
 
-  it('should update single starship', async () => {
-    await starshipsService.create({
-      data: { name: 'test-starship', crewMembers },
+  it('should fail creating many starships with not unique models', async () => {
+    const args: CreateManyStarshipArgs = prepareManyStarshipsArgs();
+
+    const starships = await starshipsService.createMany(args);
+
+    const uniqueNames = starships.map((starship) => {
+      return { ...starship, id: undefined, name: `${starship.id}-${starship.name}` };
     });
+
+    try {
+      await starshipsService.createMany({ data: uniqueNames });
+    } catch (e: unknown) {
+      expect((e as Error).message).toContain(uniqueModelConstraint);
+    }
+  });
+
+  it('should update single starship', async () => {
+    await starshipsService.create({ data: testStarShip });
 
     const starship = await starshipsService.find({
       where: { name: 'test-starship' },
@@ -199,12 +236,11 @@ describe('StarshipsService', () => {
 
     expect(updatedStarship.name).toBe('updated-starship-name');
     expect(updatedStarship.crewMembers).toBe(421);
+    expect(updatedStarship.updatedAt).not.toBe(updatedStarship.createdAt);
   });
 
   it('should fail to update a starship when not found', async () => {
-    await starshipsService.create({
-      data: { name: 'test-starship', crewMembers },
-    });
+    await starshipsService.create({ data: testStarShip });
 
     try {
       await starshipsService.update({
@@ -212,7 +248,6 @@ describe('StarshipsService', () => {
         data: { name: { set: 'not-updated-test-starship-' } },
       });
     } catch (e: unknown) {
-      expect(e).toBeDefined();
       expect((e as Error).message).toContain(
         'No record was found for an update.',
       );
@@ -220,7 +255,10 @@ describe('StarshipsService', () => {
   });
 
   it('should update many starships', async () => {
-    const starshipsQuery = await createManyTestStarships();
+    const starships = await createManyTestStarships();
+    const starshipsQuery = starships.map((starship) => {
+      return { id: { equals: starship.id } };
+    });
 
     const updatedStarships = await starshipsService.updateMany({
       where: {
@@ -255,27 +293,29 @@ describe('StarshipsService', () => {
   });
 
   it('should fail to update many starships when trying to set same name', async () => {
-    const starshipsQuery = await createManyTestStarships();
+    const starships = await createManyTestStarships();
+    const starshipsQuery = starships.map((starship) => {
+      return { id: { equals: starship.id } };
+    });
+
+    const args = {
+      where: {
+        OR: starshipsQuery,
+      },
+      data: {
+        name: { set: 'updated-starship' },
+      },
+    };
 
     try {
-      await starshipsService.updateMany({
-        where: {
-          OR: starshipsQuery,
-        },
-        data: {
-          name: { set: 'updated-starship' },
-        },
-      });
+      await starshipsService.updateMany(args);
     } catch (e: unknown) {
-      expect(e).toBeDefined();
       expect((e as Error).message).toContain(uniqueNameConstraint);
     }
   });
 
   it('should delete a starship', async () => {
-    const toDelete = await starshipsService.create({
-      data: { name: 'starship-to-delete', crewMembers: 1 },
-    });
+    const toDelete = await starshipsService.create({ data: testStarShip });
 
     await starshipsService.delete({ where: { id: toDelete?.id } });
 
@@ -287,32 +327,35 @@ describe('StarshipsService', () => {
   });
 
   it('should fail to delete a starship when not found', async () => {
-    await starshipsService.create({
-      data: { name: 'starship-to-delete', crewMembers: 1 },
-    });
+    await starshipsService.create({ data: testStarShip });
 
     try {
       await starshipsService.delete({ where: { name: 'not-a-starship' } });
     } catch (e: unknown) {
-      expect(e).toBeDefined();
       expect((e as Error).message).toContain(noRecordFoundForDelete);
     }
   });
 
   it('should delete many starships', async () => {
-    const starshipsQuery = await createManyTestStarships();
+    const starships = await createManyTestStarships();
+    const starshipsQuery = starships.map((starship) => {
+      return { id: { equals: starship.id } };
+    });
 
     await starshipsService.deleteMany({ where: { OR: starshipsQuery } });
 
-    const starships = await starshipsService.findMany({
+    const deletedStarships = await starshipsService.findMany({
       where: { OR: starshipsQuery },
     });
 
-    expect(starships?.length).toBe(0);
+    expect(deletedStarships?.length).toBe(0);
   });
 
   it('should fail to delete many starships when not found', async () => {
-    const starshipsQuery = await createManyTestStarships();
+    const starships = await createManyTestStarships();
+    const starshipsQuery = starships.map((starship) => {
+      return { id: { equals: starship.id } };
+    });
 
     const deleteQuery = [...Array(5).keys()].map((value) => {
       return { name: { equals: `starship-to-delete-${value}` } };
@@ -323,7 +366,7 @@ describe('StarshipsService', () => {
     });
     expect(result).not.toBeDefined();
 
-    const starships = await starshipsService.findMany({
+    const notDeletedStarships = await starshipsService.findMany({
       where: { OR: starshipsQuery },
     });
     expect(starships?.length).toBe(5);
