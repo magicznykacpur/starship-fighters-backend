@@ -11,7 +11,7 @@ import { UpdateManyPersonArgs } from 'src/generated/models/person/update-many-pe
 import { DeleteOnePersonArgs } from 'src/generated/models/person/delete-one-person.args';
 import { DeleteManyPersonArgs } from 'src/generated/models/person/delete-many-person.args';
 
-@Resolver()
+@Resolver('people')
 export class PeopleResolver {
   constructor(private readonly peopleService: PeopleService) {}
 
