@@ -321,12 +321,12 @@ describe('StarshipsResolver', () => {
       },
     });
 
+    expect(updatedStarships).toBeDefined();
     expect(updatedStarships.length).toBe(5);
-    expect(updatedStarships[0]?.cargoCapacity).toBe(420);
-    expect(updatedStarships[1]?.cargoCapacity).toBe(420);
-    expect(updatedStarships[2]?.cargoCapacity).toBe(420);
-    expect(updatedStarships[3]?.cargoCapacity).toBe(420);
-    expect(updatedStarships[4]?.cargoCapacity).toBe(420);
+
+    updatedStarships.forEach((starship) => {
+      expect(starship.cargoCapacity).toBe(420);
+    });
   });
 
   it('should throw exception when starships were not found for update', async () => {

@@ -53,7 +53,7 @@ describe('PeopleResolver', () => {
   });
 
   afterEach(async () => {
-    const allPeople = await peopleResolver.findAllPeople();
+    const allPeople = await peopleResolver.allPeople();
 
     if (!allPeople || allPeople?.length === 0) {
       return;
@@ -74,7 +74,7 @@ describe('PeopleResolver', () => {
   it('should query person by name', async () => {
     await createManyTestPeople();
 
-    const person = await peopleResolver.findPerson({
+    const person = await peopleResolver.person({
       where: { name: 'test-person-0' },
     });
 
@@ -91,7 +91,7 @@ describe('PeopleResolver', () => {
     };
     const exceptionMesage = `Person ${JSON.stringify(args.where)} does not exist`;
 
-    await expect(peopleResolver.findPerson(args)).rejects.toThrow(
+    await expect(peopleResolver.person(args)).rejects.toThrow(
       new NotFoundException(exceptionMesage),
     );
   });
@@ -99,7 +99,7 @@ describe('PeopleResolver', () => {
   it('should query person by id', async () => {
     const people = await createManyTestPeople();
 
-    const person = await peopleResolver.findPerson({
+    const person = await peopleResolver.person({
       where: { id: people?.at(0)?.id },
     });
 
@@ -116,7 +116,7 @@ describe('PeopleResolver', () => {
     };
     const exceptionMesage = `Person ${JSON.stringify(args.where)} does not exist`;
 
-    await expect(peopleResolver.findPerson(args)).rejects.toThrow(
+    await expect(peopleResolver.person(args)).rejects.toThrow(
       new NotFoundException(exceptionMesage),
     );
   });
@@ -124,7 +124,7 @@ describe('PeopleResolver', () => {
   it('should query person by eye color and name', async () => {
     await createManyTestPeople();
 
-    const person = await peopleResolver.findPerson({
+    const person = await peopleResolver.person({
       where: { name: 'test-person-1', AND: [{ eyeColor: { equals: 'blue' } }] },
     });
 
@@ -136,14 +136,14 @@ describe('PeopleResolver', () => {
   it('should query all people', async () => {
     await createManyTestPeople();
 
-    const people = await peopleResolver.findAllPeople();
+    const people = await peopleResolver.allPeople();
 
     expect(people?.length).toBe(5);
     expect(people?.at(0)?.name).toBe('test-person-0');
   });
 
   it('should return no people', async () => {
-    const people = await peopleResolver.findAllPeople();
+    const people = await peopleResolver.allPeople();
 
     expect(people?.length).toBe(0);
   });
@@ -155,14 +155,14 @@ describe('PeopleResolver', () => {
     });
     const args = { where: { OR: peopleQuery } };
 
-    const people = await peopleResolver.findManyPeople(args);
+    const people = await peopleResolver.people(args);
 
     expect(people).toBeDefined();
     expect(people.length).toBe(5);
     expect(people.at(0)?.name).toBe('test-person-0');
   });
 
-  it('should throw exception when starships not found', async () => {
+  it('should throw exception when people not found', async () => {
     await createManyTestPeople();
 
     const args = {
@@ -176,7 +176,7 @@ describe('PeopleResolver', () => {
     };
     const exceptionMessage = `People ${JSON.stringify(args.where)} do not exist`;
 
-    await expect(peopleResolver.findManyPeople(args)).rejects.toThrow(
+    await expect(peopleResolver.people(args)).rejects.toThrow(
       new NotFoundException(exceptionMessage),
     );
   });
@@ -273,14 +273,13 @@ describe('PeopleResolver', () => {
     });
 
     expect(updatedPeople.length).toBe(5);
-    expect(updatedPeople[0]?.homeworld).toBe('proxima-centauri');
-    expect(updatedPeople[1]?.homeworld).toBe('proxima-centauri');
-    expect(updatedPeople[2]?.homeworld).toBe('proxima-centauri');
-    expect(updatedPeople[3]?.homeworld).toBe('proxima-centauri');
-    expect(updatedPeople[4]?.homeworld).toBe('proxima-centauri');
+
+    updatedPeople.forEach((person) => {
+      expect(person.homeworld).toBe('proxima-centauri');
+    });
   });
 
-  it('should throw exception when starships were not found for update', async () => {
+  it('should throw exception when people were not found for update', async () => {
     const people = await createManyTestPeople();
     const peopleQuery = people!.map((person) => {
       return { id: { equals: `${person.id}X` } };
@@ -306,7 +305,7 @@ describe('PeopleResolver', () => {
 
     await peopleResolver.deletePerson(args);
 
-    await expect(peopleResolver.findPerson(args)).rejects.toThrow(
+    await expect(peopleResolver.person(args)).rejects.toThrow(
       new NotFoundException(exceptionMessage),
     );
   });
@@ -331,7 +330,7 @@ describe('PeopleResolver', () => {
 
     await peopleResolver.deletePeople(args);
 
-    await expect(peopleResolver.findManyPeople(args)).rejects.toThrow(
+    await expect(peopleResolver.people(args)).rejects.toThrow(
       NotFoundException,
     );
   });

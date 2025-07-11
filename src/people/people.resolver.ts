@@ -16,12 +16,12 @@ export class PeopleResolver {
   constructor(private readonly peopleService: PeopleService) {}
 
   @Query(() => [Person])
-  async findAllPeople(): Promise<Person[] | null> {
+  async allPeople(): Promise<Person[] | null> {
     return this.peopleService.findAll();
   }
 
   @Query(() => [Person])
-  async findManyPeople(@Args() args: FindManyPersonArgs) {
+  async people(@Args() args: FindManyPersonArgs) {
     const people = await this.peopleService.findMany(args);
 
     if (people?.length === 0 || !people) {
@@ -34,7 +34,7 @@ export class PeopleResolver {
   }
 
   @Query(() => Person)
-  async findPerson(@Args() args: FindUniquePersonArgs) {
+  async person(@Args() args: FindUniquePersonArgs) {
     const person = await this.peopleService.find(args);
 
     if (!person) {

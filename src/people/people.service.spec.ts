@@ -218,15 +218,14 @@ describe('PeopleService', () => {
     });
     const args = { where: { OR: peopleQuery }, data: { height: { set: 420 } } };
 
-    const updatedStarships = await peopleService.updateMany(args);
+    const updatedPeople = await peopleService.updateMany(args);
 
-    expect(updatedStarships).toBeDefined();
-    expect(updatedStarships.length).toBe(5);
-    expect(updatedStarships[0]?.height).toBe(420);
-    expect(updatedStarships[1]?.height).toBe(420);
-    expect(updatedStarships[2]?.height).toBe(420);
-    expect(updatedStarships[3]?.height).toBe(420);
-    expect(updatedStarships[4]?.height).toBe(420);
+    expect(updatedPeople).toBeDefined();
+    expect(updatedPeople.length).toBe(5);
+
+    updatedPeople.forEach((person) => {
+      expect(person.height).toBe(420);
+    });
   });
 
   it('should fail to update many people when not found', async () => {
@@ -300,9 +299,9 @@ describe('PeopleService', () => {
 
     await peopleService.deleteMany(args);
 
-    const deletedStarships = await peopleService.findMany(args);
+    const deletedPeople = await peopleService.findMany(args);
 
-    expect(deletedStarships?.length).toBe(0);
+    expect(deletedPeople?.length).toBe(0);
   });
 
   it('should fail to delete many people when not found', async () => {
@@ -312,7 +311,7 @@ describe('PeopleService', () => {
     });
 
     const deleteQuery = [...Array(5).keys()].map((value) => {
-      return { name: { equals: `starship-to-delete-${value}` } };
+      return { name: { equals: `person-to-delete-${value}` } };
     });
 
     const result = await peopleService.deleteMany({

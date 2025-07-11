@@ -271,7 +271,10 @@ describe('StarshipsService', () => {
 
     expect(updatedStarships).toBeDefined();
     expect(updatedStarships.length).toBe(5);
-    expect(updatedStarships.at(4)?.crewMembers).toBe(521);
+
+    updatedStarships.forEach((starship) => {
+      expect(starship.crewMembers).toBe(521);
+    });
   });
 
   it('should fail to update many starships when not found', async () => {
