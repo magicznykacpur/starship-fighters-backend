@@ -55,7 +55,7 @@ describe('StarshipsResolver', () => {
   });
 
   afterEach(async () => {
-    const allStarships = await starshipsResolver.findAllStarships();
+    const allStarships = await starshipsResolver.allStarships();
 
     if (!allStarships || allStarships?.length === 0) {
       return;
@@ -79,7 +79,7 @@ describe('StarshipsResolver', () => {
   it('should query starship by name', async () => {
     await createManyTestStarships();
 
-    const starship = await starshipsResolver.findStarship({
+    const starship = await starshipsResolver.starship({
       where: { name: 'test-starship-0' },
     });
 
@@ -96,7 +96,7 @@ describe('StarshipsResolver', () => {
     };
     const exceptionMesage = `Starship ${JSON.stringify(args.where)} does not exist`;
 
-    await expect(starshipsResolver.findStarship(args)).rejects.toThrow(
+    await expect(starshipsResolver.starship(args)).rejects.toThrow(
       new NotFoundException(exceptionMesage),
     );
   });
@@ -104,7 +104,7 @@ describe('StarshipsResolver', () => {
   it('should query starship by model', async () => {
     await createManyTestStarships();
 
-    const starship = await starshipsResolver.findStarship({
+    const starship = await starshipsResolver.starship({
       where: { model: 'model-0' },
     });
 
@@ -121,7 +121,7 @@ describe('StarshipsResolver', () => {
     };
     const exceptionMesage = `Starship ${JSON.stringify(args.where)} does not exist`;
 
-    await expect(starshipsResolver.findStarship(args)).rejects.toThrow(
+    await expect(starshipsResolver.starship(args)).rejects.toThrow(
       new NotFoundException(exceptionMesage),
     );
   });
@@ -129,7 +129,7 @@ describe('StarshipsResolver', () => {
   it('should query starship by model and cargo capacity', async () => {
     await createManyTestStarships();
 
-    const starship = await starshipsResolver.findStarship({
+    const starship = await starshipsResolver.starship({
       where: { model: 'model-1', AND: [{ cargoCapacity: { gt: 0 } }] },
     });
 
@@ -141,7 +141,7 @@ describe('StarshipsResolver', () => {
   it('should query starship by name and length', async () => {
     await createManyTestStarships();
 
-    const starship = await starshipsResolver.findStarship({
+    const starship = await starshipsResolver.starship({
       where: { name: 'test-starship-1', length: { gt: 0 } },
     });
 
@@ -153,14 +153,14 @@ describe('StarshipsResolver', () => {
   it('should query all starships', async () => {
     await createManyTestStarships();
 
-    const starships = await starshipsResolver.findAllStarships();
+    const starships = await starshipsResolver.allStarships();
 
     expect(starships?.length).toBe(5);
     expect(starships?.at(0)?.name).toBe('test-starship-0');
   });
 
   it('should return no starships', async () => {
-    const starships = await starshipsResolver.findAllStarships();
+    const starships = await starshipsResolver.allStarships();
 
     expect(starships?.length).toBe(0);
   });
@@ -171,7 +171,7 @@ describe('StarshipsResolver', () => {
       return { name: { equals: starship.name } };
     });
 
-    const starships = await starshipsResolver.findManyStarships({
+    const starships = await starshipsResolver.starships({
       where: {
         OR: starshipsQuery,
       },
@@ -196,7 +196,7 @@ describe('StarshipsResolver', () => {
     };
     const exceptionMessage = `Starships ${JSON.stringify(args.where)} do not exist`;
 
-    await expect(starshipsResolver.findManyStarships(args)).rejects.toThrow(
+    await expect(starshipsResolver.starships(args)).rejects.toThrow(
       new NotFoundException(exceptionMessage),
     );
   });
@@ -355,7 +355,7 @@ describe('StarshipsResolver', () => {
 
     await starshipsResolver.deleteStarship(args);
 
-    await expect(starshipsResolver.findStarship(args)).rejects.toThrow(
+    await expect(starshipsResolver.starship(args)).rejects.toThrow(
       new NotFoundException(exceptionMessage),
     );
   });
@@ -381,7 +381,7 @@ describe('StarshipsResolver', () => {
 
     await starshipsResolver.deleteStarships(args);
 
-    await expect(starshipsResolver.findManyStarships(args)).rejects.toThrow(
+    await expect(starshipsResolver.starships(args)).rejects.toThrow(
       NotFoundException,
     );
   });

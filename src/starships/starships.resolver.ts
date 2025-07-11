@@ -16,12 +16,12 @@ export class StarshipsResolver {
   constructor(private readonly starshipService: StarshipsService) {}
 
   @Query(() => [Starship])
-  async findAllStarships(): Promise<Starship[] | null> {
+  async allStarships(): Promise<Starship[] | null> {
     return this.starshipService.findAll();
   }
 
   @Query(() => [Starship])
-  async findManyStarships(@Args() args: FindManyStarshipArgs) {
+  async starships(@Args() args: FindManyStarshipArgs) {
     const starships = await this.starshipService.findMany(args);
 
     if (starships?.length === 0 || !starships) {
@@ -34,7 +34,7 @@ export class StarshipsResolver {
   }
 
   @Query(() => Starship)
-  async findStarship(@Args() args: FindUniqueStarshipArgs) {
+  async starship(@Args() args: FindUniqueStarshipArgs) {
     const starship = await this.starshipService.find(args);
 
     if (!starship) {
