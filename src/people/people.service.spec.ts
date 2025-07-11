@@ -35,6 +35,7 @@ describe('PeopleService', () => {
           height: 160 + value * 7,
           homeworld: 'venus',
           skinColor: 'black',
+          createdAt: new Date(Date.now() + 1000 * value),
         };
       }),
     };
@@ -102,6 +103,19 @@ describe('PeopleService', () => {
     expect(findManyResult).not.toBe(null);
     expect(findManyResult?.length).toBe(5);
     expect(findManyResult?.at(4)?.name).toBe('test-person-4');
+  });
+
+  it('should paginate people', async () => {
+    await createManyTestPeople();
+
+    const paginatedResult = await peopleService.findMany({
+      skip: 4,
+      take: 1,
+      orderBy: [{ createdAt: 'asc' }],
+    });
+
+    expect(paginatedResult).toBeDefined();
+    expect(paginatedResult![0].name).toBe('test-person-4');
   });
 
   it('should not find people with invalid query', async () => {

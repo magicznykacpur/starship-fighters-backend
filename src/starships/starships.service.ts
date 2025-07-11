@@ -26,8 +26,18 @@ export class StarshipsService {
     return starships;
   }
 
-  async findMany({ where }: FindManyStarshipArgs): Promise<Starship[] | null> {
-    const starships = await this.prisma.starship.findMany({ where });
+  async findMany({
+    where,
+    take,
+    skip,
+    orderBy,
+  }: FindManyStarshipArgs): Promise<Starship[] | null> {
+    const starships = await this.prisma.starship.findMany({
+      where,
+      take,
+      skip,
+      orderBy,
+    });
 
     return starships;
   }

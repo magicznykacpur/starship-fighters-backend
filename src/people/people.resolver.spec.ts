@@ -162,6 +162,19 @@ describe('PeopleResolver', () => {
     expect(people.at(0)?.name).toBe('test-person-0');
   });
 
+  it('should paginate people', async () => {
+    await createManyTestPeople();
+
+    const paginatedResult = await peopleResolver.people({
+      skip: 4,
+      take: 1,
+      orderBy: [{ createdAt: 'asc' }],
+    });
+
+    expect(paginatedResult).toBeDefined();
+    expect(paginatedResult[0].name).toBe('test-person-4');
+  });
+
   it('should throw exception when people not found', async () => {
     await createManyTestPeople();
 

@@ -182,6 +182,19 @@ describe('StarshipsResolver', () => {
     expect(starships.at(0)?.name).toBe('test-starship-0');
   });
 
+  it('should paginate starships', async () => {
+    await createManyTestStarships();
+
+    const paginatedResult = await starshipsResolver.starships({
+      skip: 4,
+      take: 1,
+      orderBy: [{ createdAt: 'asc' }],
+    });
+
+    expect(paginatedResult).toBeDefined();
+    expect(paginatedResult[0].name).toBe('test-starship-4');
+  });
+
   it('should throw exception when starships not found', async () => {
     await createManyTestStarships();
 

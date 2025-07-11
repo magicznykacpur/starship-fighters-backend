@@ -22,8 +22,13 @@ export class PeopleService {
     return this.prisma.person.findMany();
   }
 
-  async findMany({ where }: FindManyPersonArgs): Promise<Person[] | null> {
-    return this.prisma.person.findMany({ where });
+  async findMany({
+    where,
+    take,
+    skip,
+    orderBy,
+  }: FindManyPersonArgs): Promise<Person[] | null> {
+    return this.prisma.person.findMany({ where, take, skip, orderBy });
   }
 
   async create(args: CreateOnePersonArgs): Promise<Person> {

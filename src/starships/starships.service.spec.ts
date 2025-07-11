@@ -39,6 +39,7 @@ describe('StarshipsService', () => {
           starshipClass:
             value % 2 === 1 ? StarshipClass.FIGHTER : StarshipClass.SPEEDER,
           crewMembers: 42,
+          createdAt: new Date(Date.now() + 1000 * value),
         };
       }),
     };
@@ -117,6 +118,19 @@ describe('StarshipsService', () => {
     expect(findManyResult).not.toBe(null);
     expect(findManyResult?.length).toBe(5);
     expect(findManyResult?.at(4)?.name).toBe('test-starship-4');
+  });
+
+  it('should paginate starships', async () => {
+    await createManyTestStarships();
+
+    const paginatedResult = await starshipsService.findMany({
+      skip: 4,
+      take: 1,
+      orderBy: [{ createdAt: 'asc' }],
+    });
+
+    expect(paginatedResult).toBeDefined();
+    expect(paginatedResult![0].name).toBe('test-starship-4');
   });
 
   it('should not find starships with invalid query', async () => {
