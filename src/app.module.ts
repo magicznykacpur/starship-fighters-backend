@@ -10,6 +10,7 @@ import { PeopleModule } from './people/people.module';
     ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
+      path: 'api',
       graphiql: process.env.NODE_ENV !== 'production',
       autoSchemaFile: true,
     }),
