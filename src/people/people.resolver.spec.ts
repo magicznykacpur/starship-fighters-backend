@@ -248,11 +248,11 @@ describe('PeopleResolver', () => {
     });
 
     expect(updatedPerson).toBeDefined();
-    expect(updatedPerson!.updatedAt).not.toBe(updatedPerson!.createdAt);
-    expect(updatedPerson!.name).toBe('updated-person');
-    expect(updatedPerson!.eyeColor).toBe('updated-eyes');
-    expect(updatedPerson!.mass).toBe(420);
-    expect(updatedPerson!.height).toBe(202);
+    expect(updatedPerson?.updatedAt).not.toBe(updatedPerson?.createdAt);
+    expect(updatedPerson?.name).toBe('updated-person');
+    expect(updatedPerson?.eyeColor).toBe('updated-eyes');
+    expect(updatedPerson?.mass).toBe(420);
+    expect(updatedPerson?.height).toBe(202);
   });
 
   it('should throw exception when person was not found for update', async () => {
@@ -272,7 +272,7 @@ describe('PeopleResolver', () => {
 
   it('should update people', async () => {
     const people = await createManyTestPeople();
-    const peopleQuery = people!.map((person) => {
+    const peopleQuery = people?.map((person) => {
       return { id: { equals: person.id } };
     });
 

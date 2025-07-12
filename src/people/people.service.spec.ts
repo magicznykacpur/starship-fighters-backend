@@ -78,7 +78,7 @@ describe('PeopleService', () => {
     });
 
     expect(findResult).toBeDefined();
-    expect(findResult!.id).toBe(createResult.id);
+    expect(findResult?.id).toBe(createResult.id);
   });
 
   it('should not find unique person with invalid query', async () => {
@@ -115,7 +115,7 @@ describe('PeopleService', () => {
     });
 
     expect(paginatedResult).toBeDefined();
-    expect(paginatedResult![0].name).toBe('test-person-4');
+    expect(paginatedResult?.at(0)?.name).toBe('test-person-4');
   });
 
   it('should not find people with invalid query', async () => {

@@ -179,7 +179,7 @@ describe('StarshipsResolver', () => {
 
     expect(starships).toBeDefined();
     expect(starships.length).toBe(5);
-    expect(starships.at(0)?.name).toBe('test-starship-0');
+    expect(starships[0].name).toBe('test-starship-0');
   });
 
   it('should paginate starships', async () => {
@@ -250,8 +250,8 @@ describe('StarshipsResolver', () => {
     const starships = await starshipsResolver.createStarships(args);
 
     expect(starships).toBeDefined();
-    expect(starships!.length).toBe(5);
-    expect(starships!.at(0)!.name).toBe('test-starship-0');
+    expect(starships?.length).toBe(5);
+    expect(starships?.at(0)?.name).toBe('test-starship-0');
   });
 
   it('should fail to create many starships with not unique names', async () => {
