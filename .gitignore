@@ -1,8 +1,5 @@
 node_modules
 
-.env
-.test.env
-
 src/generated
 
 dist

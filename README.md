@@ -3,11 +3,12 @@
 This is a NestJS application written using typescript with Postgres as a DB and
 Prisma as an ORM. It exposes a graphql api with CRUD operations and pagination.
 
+Since this is a demo only, I've added .env files to the repo for simplicity.
+
 ## How to run
 
 ### First time
 
-- create a `.env` file with `DATABASE_URL="postgresql://postgres:postgres@localhost:5442/starship-fighters"`
 - run `npm install` to install all the required packages
 - run `docker compose up -d` to start the postgres database
 - run `npx prisma migrate reset -f` to run migrations, seed the database and to generate the necessary ORM types and classes
@@ -21,14 +22,7 @@ Prisma as an ORM. It exposes a graphql api with CRUD operations and pagination.
 
 ## Testing
 
-Please read below to make sure test can be ran with one command
-
-- create a `test.env` file with those variables:
-
-`DATABASE_URL="postgresql://postgres:postgres@localhost:5443/starship-fighters-test"`
-`COMPOSE_IGNORE_ORPHANS=true`
-
-- run `npm run test`
+Please read below to make sure test can be ran with one command `npm run test`
 
 I chose Prisma as an ORM for this project. Prisma doesn't support running migrations
 programatically, and I wanted to test the services and resolvers on an actual running
