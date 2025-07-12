@@ -52,6 +52,7 @@ export class StarshipsResolver {
   ): Promise<Starship | void> {
     try {
       const starship = await this.starshipService.create(args);
+
       return starship;
     } catch (e: unknown) {
       if ((e as Error).message.includes('(`name`)')) {
@@ -70,6 +71,7 @@ export class StarshipsResolver {
   ): Promise<Starship[] | void> {
     try {
       const starships = await this.starshipService.createMany(args);
+
       return starships;
     } catch (e: unknown) {
       if ((e as Error).message.includes('(`name`)')) {
@@ -88,6 +90,7 @@ export class StarshipsResolver {
   ): Promise<Starship | void> {
     try {
       const updatedStarship = await this.starshipService.update(args);
+      
       return updatedStarship;
     } catch (e: unknown) {
       if ((e as Error).message.includes('No record was found for an update.')) {
