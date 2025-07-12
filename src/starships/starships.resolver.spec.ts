@@ -313,9 +313,10 @@ describe('StarshipsResolver', () => {
       where: { id: `${starship?.id}X` },
       data: { name: { set: 'not-updated' } },
     };
+    const exceptionMesage = `Starship ${JSON.stringify(args.where)} does not exist`;
 
     await expect(starshipsResolver.updateStarship(args)).rejects.toThrow(
-      new BadRequestException('No record was found for an update.'),
+      new BadRequestException(exceptionMesage),
     );
   });
 
@@ -348,13 +349,14 @@ describe('StarshipsResolver', () => {
       return { id: { equals: `${starship.id}X` } };
     });
 
-    await expect(
-      starshipsResolver.updateStarships({
-        where: { OR: starshipsQuery },
-        data: { cargoCapacity: { set: 420 } },
-      }),
-    ).rejects.toThrow(
-      new NotFoundException('No records were found for an update.'),
+    const args = {
+      where: { OR: starshipsQuery },
+      data: { cargoCapacity: { set: 420 } },
+    };
+    const exceptionMesage = `Starships ${JSON.stringify(args.where)} do not exist`;
+
+    await expect(starshipsResolver.updateStarships(args)).rejects.toThrow(
+      new NotFoundException(exceptionMesage),
     );
   });
 

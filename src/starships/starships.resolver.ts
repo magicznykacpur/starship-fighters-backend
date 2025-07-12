@@ -90,11 +90,13 @@ export class StarshipsResolver {
   ): Promise<Starship | void> {
     try {
       const updatedStarship = await this.starshipService.update(args);
-      
+
       return updatedStarship;
     } catch (e: unknown) {
       if ((e as Error).message.includes('No record was found for an update.')) {
-        throw new BadRequestException('No record was found for an update.');
+        throw new BadRequestException(
+          `Starship ${JSON.stringify(args.where)} does not exist`,
+        );
       }
     }
   }
@@ -106,7 +108,9 @@ export class StarshipsResolver {
     const starships = await this.starshipService.findMany(args);
 
     if (!starships || starships.length === 0) {
-      throw new NotFoundException('No records were found for an update.');
+      throw new NotFoundException(
+        `Starships ${JSON.stringify(args.where)} do not exist`,
+      );
     }
 
     const updatedStarships = await this.starshipService.updateMany(args);

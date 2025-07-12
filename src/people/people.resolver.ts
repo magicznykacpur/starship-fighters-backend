@@ -94,7 +94,9 @@ export class PeopleResolver {
       return person;
     } catch (e: unknown) {
       if ((e as Error).message.includes('No record was found for an update.')) {
-        throw new BadRequestException('No record was found for an update.');
+        throw new BadRequestException(
+          `Person ${JSON.stringify(args.where)} does not exist`,
+        );
       }
     }
   }
@@ -104,7 +106,9 @@ export class PeopleResolver {
     const people = await this.peopleService.findMany(args);
 
     if (!people || people.length === 0) {
-      throw new NotFoundException('No records were found for an update.');
+      throw new NotFoundException(
+        `People ${JSON.stringify(args.where)} do not exist`,
+      );
     }
 
     return this.peopleService.updateMany(args);

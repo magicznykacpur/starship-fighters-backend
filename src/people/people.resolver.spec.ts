@@ -264,9 +264,10 @@ describe('PeopleResolver', () => {
       where: { id: `${person!.id}X` },
       data: { name: { set: 'not-updated' } },
     };
+    const exceptionMessage = `Person ${JSON.stringify(args.where)} does not exist`;
 
     await expect(peopleResolver.updatePerson(args)).rejects.toThrow(
-      new BadRequestException('No record was found for an update.'),
+      new BadRequestException(exceptionMessage),
     );
   });
 
@@ -298,14 +299,18 @@ describe('PeopleResolver', () => {
       return { id: { equals: `${person.id}X` } };
     });
 
+    const args = {
+      where: { OR: peopleQuery },
+      data: { homeworld: { set: 'proxima-centauri' } },
+    };
+    const exceptionMessage = `People ${JSON.stringify(args.where)} do not exist`;
+
     await expect(
       peopleResolver.updatePeople({
         where: { OR: peopleQuery },
         data: { homeworld: { set: 'proxima-centauri' } },
       }),
-    ).rejects.toThrow(
-      new NotFoundException('No records were found for an update.'),
-    );
+    ).rejects.toThrow(new NotFoundException(exceptionMessage));
   });
 
   it('should delete a person', async () => {
