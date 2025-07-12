@@ -21,6 +21,8 @@ Prisma as an ORM. It exposes a graphql api with CRUD operations and pagination.
 
 ## Testing
 
+Please read below to make sure test can be ran with one command
+
 - create a `test.env` file with those variables:
 
 `DATABASE_URL="postgresql://postgres:postgres@localhost:5443/starship-fighters-test"`
