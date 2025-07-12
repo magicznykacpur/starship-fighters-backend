@@ -9,6 +9,10 @@ Since this is a demo only, I've added .env files to the repo for simplicity.
 
 ### First time
 
+Project was developed using `node v24.0.0` so please use this version or above
+when installing dependencies and running tests.
+
+
 - run `npm install` to install all the required packages
 - run `docker compose up -d` to start the postgres database
 - run `npx prisma migrate reset -f` to run migrations, seed the database and to generate the necessary ORM types and classes
