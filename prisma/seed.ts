@@ -72,6 +72,36 @@ const people: Omit<Person, 'id' | 'createdAt' | 'updatedAt'>[] = [
     homeworld: 'earth',
     skinColor: 'brown',
   },
+  {
+    name: 'Bacon',
+    mass: 118,
+    birthYear: 1999,
+    eyeColor: 'blue',
+    hairColor: 'blonde',
+    height: 215,
+    homeworld: 'mars',
+    skinColor: 'white',
+  },
+  {
+    name: 'Draco',
+    mass: 79,
+    birthYear: 1992,
+    eyeColor: 'green',
+    hairColor: 'blonde',
+    height: 180,
+    homeworld: 'earth',
+    skinColor: 'pale',
+  },
+  {
+    name: 'Luke',
+    mass: 95,
+    birthYear: 1995,
+    eyeColor: 'brown',
+    hairColor: 'brown',
+    height: 187,
+    homeworld: 'tatooine',
+    skinColor: 'brown',
+  },
 ];
 
 const starships: Omit<Starship, 'id' | 'createdAt' | 'updatedAt'>[] = [
@@ -164,6 +194,16 @@ const starships: Omit<Starship, 'id' | 'createdAt' | 'updatedAt'>[] = [
     hyperdriveRating: 5.7,
     starshipClass: StarshipClass.SPEEDER,
     crewMembers: 12,
+  },
+  {
+    name: 'ADS5YTUO6NJ',
+    model: 'ADS5YTUO6NJ-1',
+    length: 505,
+    cargoCapacity: 950,
+    maxSpeed: 6500,
+    hyperdriveRating: 5.8,
+    starshipClass: StarshipClass.SPEEDER,
+    crewMembers: 13,
   },
 ];
 
