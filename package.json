@@ -15,7 +15,7 @@
     "docker:test:up": "dotenv -e .test.env docker compose -- -f docker-compose-test.yaml up -d",
     "docker:test:down": "docker compose -f docker-compose-test.yaml down",
     "migrate:test": "dotenv -e .test.env prisma migrate reset -- -f --skip-seed ",
-    "test:env": "dotenv -e .test.env jest",
+    "test:env": "dotenv -e .test.env jest -- --runInBand",
     "test": "npm run docker:test:up && npm run migrate:test && npm run test:env; npm run docker:test:down",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
